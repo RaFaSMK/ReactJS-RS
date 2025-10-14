@@ -16,8 +16,27 @@
 
   <script type="text/babel">
 
+    const [CounterContext] = React.createContext()
+
+    function CounterProvider({ children }) {
+      const [savedCounts, setSavedCounts] = React.useState([])
+
+      function saveCount(count) {
+        setSavedCounts((prev) => [...prev, count])
+      }
+
+      return (
+        <CounterContext.Provider
+          value={{ savedCounts, saveCount }}
+        >
+          {children}
+        </CounterContext.Provider>
+      )
+    }
+
     function Counter() {
       const [counter, setCounter] = React.useState(0)
+      const { saveCount } = React.useContext(CounterContext)
 
       return (
         <>
@@ -39,14 +58,38 @@
           >
             Decrementar
           </button>
+          <button
+            onClick={() => saveCount(counter)}
+          >
+            Salvar
+          </button>
         </>
+      )
+    }
+
+    function CounterList() {
+      const { savedCounts } = React.useContext(CounterContext)
+
+      return (
+        <div>
+          <h2>Valores salvos</h2>
+          <ul>
+            {savedCounts.map((value, index) =>
+              <li key={`item-${index}`}>value</li>
+            )}
+          </ul>
+        </div>
       )
     }
 
     function App() {
       return (
         <main>
-          <Counter />
+          <CounterProvider>
+            <Counter />
+            <hr />
+            <CounterList />
+          </CounterProvider>
         </main>
       )
     }
