@@ -36,11 +36,13 @@
 
     function Counter() {
       const [counter, setCounter] = React.useState(0)
-      const { saveCount } = React.useContext(CounterContext)
+      const { savedCounts, saveCount } = React.useContext(CounterContext)
 
       return (
         <>
-          <p>Contador: {counter}</p>
+          <p>Contador: {counter} -
+            Último valor salvo: {savedCounts[savedCounts.length - 1] || '-'}
+          </p>
           <button onClick={() => setCounter(counter + 1)}>
             Atualizar
           </button>
